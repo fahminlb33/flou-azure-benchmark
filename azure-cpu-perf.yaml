@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sysbench-cpu
+  #namespace: logeect-stage
+  labels:
+    app: sysbench-cpu
+spec:
+  template:
+    metadata:
+      labels:
+        app: sysbench-cpu
+    spec:
+      containers:
+      - name: fio
+        image: homeine/sysbench:latest
+        command: ["sh"]
+        args: ["-c", "sysbench cpu --cpu-max-prime=20000 --threads=4 --time=60 run"]
+        resources:
+          limits:
+            memory: 1Gi
+        imagePullPolicy: Always
+      restartPolicy: Never

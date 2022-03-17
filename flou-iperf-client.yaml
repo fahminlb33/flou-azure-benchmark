@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: iperf-bandwidth-benchmark
+  namespace: logeect-stage
+  labels:
+    app: iperf-bandwidth-benchmark
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: iperf-bandwidth-benchmark
+    spec:
+      containers:
+      - name: iperf3
+        image: networkstatic/iperf3
+        command: [ "iperf3" ]
+        args: [ "-c", "x.x.x.x", "-w", "32768", "-t", "30" ]
+        resources:
+          limits:
+            memory: 1Gi
+        imagePullPolicy: Always
+      restartPolicy: Never
+      nodeSelector:
+         node-role.kubernetes.io/worker: "stage"

@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iperf-server
+  #namespace: logeect-stage
+  labels:
+    app: iperf-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iperf-server
+  template:
+    metadata:
+      labels:
+        app: iperf-server
+    spec:
+      containers:
+      - name: iperf-server
+        image: networkstatic/iperf3
+        # dont forget to create node port! using kubectl expose deployment iperf-server --type=NodePort
+        ports:
+          - containerPort: 5201
+            protocol: TCP
+        command: ["iperf3"]
+        args:
+        - "-s"
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: 1Gi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
